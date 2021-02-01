@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StudentProfile from 'components/StudentProfile/StudentProfile';
 import { Wrapper } from 'components/SchoolNews/SchoolNews.styles';
 
+import axios from "axios"
+
 const StudentsList = () => {
-  const [students, setStudents] = useState([
-    {
-      name: 'Fake',
-      age: 32,
-      group: 'Fake Group',
-      grades: [2,5,4,4,5,5],
-    }
-  ]);
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/users')
+      .then(({ data }) => {
+        console.log(data)
+        setStudents(data)
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }, [])
 
   return (
     <Wrapper>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
-      <StudentProfile studentData={students[0]}/>
+      {students.length 
+      ? students.map(student =><StudentProfile key={student._id} studentData={student}/> )
+      : <h2>No students</h2>}
     </Wrapper>
   );
 }
