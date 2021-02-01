@@ -46,9 +46,7 @@ const StudentForm = () => {
   const [average, setAverage] = useState();
 
   useEffect(() => {
-    if (scores.length) {
-      setAverage(getGradesAvg(scores));
-    }
+    setAverage(getGradesAvg(scores));
   }, [scores])
 
   const handleScoreInputChange = (e) => {
