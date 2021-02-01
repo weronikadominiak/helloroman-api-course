@@ -14,7 +14,8 @@ import {
   Label, SaveButton,
   Scores,
   ScoresWrapper
-} from 'components/StudentForm/StudentForm.styles';
+} from 'components/StudentForm/StudentForm.styles'; 
+import axios from "axios";
 
 let grade = yup.number();
 grade
@@ -24,18 +25,30 @@ grade
   .max(6, 'Ocena musi być niższa od 7');
 
 const StudentForm = () => {
-  const [scores, setScores] = useState([4,2,3,4,4,3,4]);
+  const [scores, setScores] = useState([]);
   const [scoreInputValue, setScoreInputValue] = useState('');
   const { register, handleSubmit, watch, errors } = useForm();
-  const onSubmit = data => console.log({ ...data, scores });
+
+  const onSubmit = ({name, age, group }) => {
+    axios.post('http://localhost:8000/users', {
+      name,
+      age: parseInt(age, 10),
+      grades: scores,
+      group,
+    })
+    .then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
   const [average, setAverage] = useState();
 
   useEffect(() => {
-    setScores([4,2,3,4,4,3,4]);
-  }, []);
-
-  useEffect(() => {
-    setAverage(getGradesAvg(scores));
+    if (scores.length) {
+      setAverage(getGradesAvg(scores));
+    }
   }, [scores])
 
   const handleScoreInputChange = (e) => {
@@ -55,7 +68,6 @@ const StudentForm = () => {
           <Input id="name" name="name" ref={register}/></Field>
         <Field><Label>Grupa</Label>
           <Input id="group" name="group" ref={register}/></Field>
-
         <Field><Label>Wiek</Label>
           <Input id="age" name="age" ref={register}/></Field>
         <Field><Label>Dodaj ocenę</Label>
