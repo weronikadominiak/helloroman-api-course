@@ -15,7 +15,7 @@ import {
   Scores,
   ScoresWrapper
 } from 'components/StudentForm/StudentForm.styles'; 
-import axios from "axios";
+import { api, endpoints } from "api";
 
 let grade = yup.number();
 grade
@@ -30,7 +30,7 @@ const StudentForm = () => {
   const { register, handleSubmit, watch, errors } = useForm();
 
   const onSubmit = ({name, age, group }) => {
-    axios.post('http://localhost:8000/users', {
+    api.post(endpoints.users, {
       name,
       age: parseInt(age, 10),
       grades: scores,
